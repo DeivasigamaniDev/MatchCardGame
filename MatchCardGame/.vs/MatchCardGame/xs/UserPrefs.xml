@@ -1,0 +1,17 @@
+﻿<Properties StartupConfiguration="{636CE064-B976-76CD-F8D2-BBAF7007E486}|">
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="fb3c0597-1de8-42c0-8d3f-3003c8e51a48" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameController.cs">
+    <Files>
+      <File FileName="../../Downloads/Matchcardgame-main/Assets/Scripts/CardController.cs" Line="25" Column="36" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="19" Column="30" />
+      <File FileName="../../Downloads/Matchcardgame-main/Assets/Scripts/MatchCards.cs" Line="4" Column="1" />
+      <File FileName="Assets/Scripts/CardController.cs" Line="6" Column="28" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+</Properties>
