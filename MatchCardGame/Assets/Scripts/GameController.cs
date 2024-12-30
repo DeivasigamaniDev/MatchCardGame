@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
+    public AudioSource audiosource, bgaudiosource;
+    public AudioClip[] audioclip;
     public static int gameSize = 2, Levelcount = 2;
     [SerializeField]
     private GameObject prefab;
@@ -15,25 +18,44 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Sprite[] sprites;
     private CardController[] cards;
+    int score = 0, hiscore = 0;
+    public Text ScoreText, HighScoretText, LevelcountText;
+    [SerializeField]
+    private GameObject GamePlayArea, InGameUI;
     private int spriteSelected;
     private int cardSelected;
     private int cardLeft;
     private bool gameStart;
-    [SerializeField]
-    private GameObject GamePlayArea;
-
+    public Sprite[] soundIcons;
+    public Image soundButton;
     void Awake()
     {
         Instance = this;
     }
     void Start()
     {
+        if (PlayerPrefs.HasKey("HighScoretText"))
+        {
+            hiscore = PlayerPrefs.GetInt("HighScoretText", hiscore);
+            HighScoretText.text = "HighScore: " + hiscore.ToString();
+        }
 
+        {
+            Levelcount = PlayerPrefs.GetInt("LevelcountText", Levelcount);
+            gameSize = Levelcount;
+            LevelcountText.text = (Levelcount + "X" + Levelcount).ToString();
+        }
+        gameStart = false;
+        GamePlayArea.SetActive(false);
+        InGameUI.SetActive(false);
     }
     public void StartCardGame()
     {
+        PlayAudiobyIndex(4);
         if (gameStart) return;
         gameStart = true;
+        GamePlayArea.SetActive(true);
+        InGameUI.SetActive(true);
         SetGamePanel();
         cardSelected = spriteSelected = -1;
         cardLeft = cards.Length;
@@ -152,6 +174,7 @@ public class GameController : MonoBehaviour
         {
             spriteSelected = spriteId;
             cardSelected = cardId;
+            PlayAudiobyIndex(3);
         }
         else
         {
@@ -161,11 +184,20 @@ public class GameController : MonoBehaviour
                 cards[cardId].Inactive();
                 cardLeft -= 2;
                 CheckGameWin();
+                score += 5;
+                ScoreText.text = "Score: " + score.ToString();
+                if (score > hiscore)
+                {
+                    HighScoretText.text = "HighScore: " + score.ToString();
+                    PlayerPrefs.SetInt("HighScoretText", score);
+                }
+                PlayAudiobyIndex(2);
             }
             else
             {
                 cards[cardSelected].Flip();
                 cards[cardId].Flip();
+                PlayAudiobyIndex(1);
             }
             cardSelected = spriteSelected = -1;
         }
@@ -177,20 +209,51 @@ public class GameController : MonoBehaviour
             Levelcount += 1;
             EndGame();
             gameSize = Levelcount;
+            PlayAudiobyIndex(0);
         }
     }
     private void EndGame()
     {
         gameStart = false;
         GamePlayArea.SetActive(false);
+        InGameUI.SetActive(false);
+        LevelcountText.text = (Levelcount + "X" + Levelcount).ToString();
         PlayerPrefs.SetInt("LevelcountText", Levelcount);
     }
     public void Reset()
     {
         EndGame();
+        PlayAudiobyIndex(4);
     }
     public void DisplayResult()
     {
+        InGameUI.SetActive(true);
     }
     int i = 1;
+    public void SoundController()
+    {
+        i++;
+        if (i % 2 == 0)
+        {
+            soundButton.sprite = soundIcons[0];
+            audiosource.volume = 0;
+            bgaudiosource.volume = 0;
+        }
+        else
+        {
+            soundButton.sprite = soundIcons[1];
+            audiosource.volume = 1;
+            bgaudiosource.volume = 0.5f;
+        }
+    }
+    void PlayAudiobyIndex(int index)
+    {
+        audiosource.clip = audioclip[index];
+        audiosource.Play();
+    }
+    public void Help(int index)
+    {
+        audiosource.clip = audioclip[index];
+        audiosource.Play();
+    }
 }

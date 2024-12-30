@@ -42,7 +42,10 @@ public class CardController : MonoBehaviour
     private void ChangeSprite()
     {
         if (spriteID == -1 || img == null) return;
-        
+        if (flipped)
+            img.sprite = GameController.Instance.GetSprite(spriteID);
+        else
+            img.sprite = GameController.Instance.CardBack();
     }
     public void Inactive()
     {
@@ -88,13 +91,13 @@ public class CardController : MonoBehaviour
     public void CardBtn()
     {
         if (flipped || turning) return;
-        
+        if (!GameController.Instance.canClick()) return;
         Flip();
         StartCoroutine(SelectionEvent());
     }
     private IEnumerator SelectionEvent()
     {
         yield return new WaitForSeconds(0.5f);
-       
+        GameController.Instance.cardClicked(spriteID, id);
     }
 }
